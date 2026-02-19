@@ -14,6 +14,13 @@ void setup()
 
 void loop()
 {
+  display.update(); // Update display state?
+
+  if (display.isShowingTimedMessage())
+  {
+    return; // No input but loop still runs
+  }
+
   int current_cmc = input.getCurrentCMC();
   display.showCMC(String(current_cmc));
   if (input.isButtonPressed())
@@ -22,7 +29,8 @@ void loop()
     delay(300);
     display.invertDisplay(false);
     String file = storage.getRandomCard(String(current_cmc));
-    Serial.print("Printing file: ");
+    display.showTimedMessage(file.substring(7), 2000);
+    Serial.print("[MAIN] Printing file: ");
     Serial.println(file);
   }
 }
