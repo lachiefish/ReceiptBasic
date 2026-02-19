@@ -29,16 +29,29 @@ void Display::clear()
   oled.clearDisplay();
 }
 
-void Display::invertDisplay(bool inverted) {
+void Display::invertDisplay(bool inverted)
+{
   oled.invertDisplay(inverted);
 }
 
-void Display::showCmc(String cmc)
+void Display::showCMC(const String &cmc)
 {
   oled.clearDisplay();
-  oled.setTextSize(1);
   oled.setTextColor(SSD1306_WHITE);
-  oled.setCursor(0, 0);
-  oled.println("CMC: " + cmc);
+  oled.setTextSize(1);
+  String title = "MOMIR BASIC";
+  oled.setCursor(getCenteredX(title, 1), 0);
+  oled.print(title);
+  oled.setTextSize(3);
+  String cmc_text = "CMC: " + cmc;
+  oled.setCursor(getCenteredX(cmc_text, 3), 20);
+  oled.print(cmc_text);
   oled.display();
+}
+
+int Display::getCenteredX(const String &text, int textSize)
+{
+  int charWidth = 6 * textSize; // 6 pixels per char at size 1
+  int textWidth = text.length() * charWidth;
+  return (OLED_SCREEN_WIDTH - textWidth) / 2;
 }

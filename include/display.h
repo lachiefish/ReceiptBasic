@@ -9,10 +9,12 @@ public:
   void update();
   void clear();
   void invertDisplay(bool inverted);
-  void showCmc(String cmc);
+  void showCMC(const String &cmc);
 
 private:
   Adafruit_SSD1306 oled;
+
+  int getCenteredX(const String &text, int textSize);
 };
 
 extern Display display;

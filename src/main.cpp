@@ -6,13 +6,13 @@ void setup()
 {
   Serial.begin(115200);
   display.begin();
-  display.showCmc("test");
+  display.showCMC("test");
   input.begin();
 }
 
 void loop()
 {
-  display.showCmc(String(input.getCurrentCMC()));
+  display.showCMC(String(input.getCurrentCMC()));
   if (input.isButtonPressed()) {
     display.invertDisplay(true);
     delay(300);

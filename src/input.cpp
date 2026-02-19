@@ -12,11 +12,17 @@ void Input::begin()
   Serial.println(F("[INPUT] Encoder initialised"));
 }
 
-int Input::getCurrentCMC()
+int Input::getCurrentCMC() // #TODO dont track CMC with count, when constrained it doesn't go down until count goes below MAX_CMC
 {
+  static int last_count = 0;
   int count = encoder.getCount() / 4; // Assuming 4 counts per revolution for a full quadrature encoder
+  if (count != last_count)
+  {
+    last_count = count;
+    Serial.print(F("[INPUT] Count: "));
+    Serial.println(count);
+  }
   int cmc = constrainCMC(count);
-
   return constrainCMC(count);
 }
 
@@ -50,9 +56,3 @@ int Input::constrainCMC(int cmc)
     return MAX_CMC;
   return cmc;
 }
-
-// if (digitalRead(ENCODER_SW_PIN) == LOW) {
-//     Serial.println("Button!");
-//     delay(200);
-//     while(digitalRead(ENCODER_SW_PIN) == LOW);
-// }
