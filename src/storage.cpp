@@ -28,7 +28,7 @@ void Storage::begin()
   }
 }
 
-String Storage::getRandomCard(const String &cmc)
+String Storage::getRandomCardPath(const String &cmc)
 {
   String dir_path = "/cards/" + cmc;
 

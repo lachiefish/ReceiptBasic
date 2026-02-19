@@ -4,4 +4,8 @@
 .vscode/launch.json
 .vscode/ipch
 
-data/cards
+data/*
+!data/scripts/
+data/scripts/creatures.json
+
+*.bak
