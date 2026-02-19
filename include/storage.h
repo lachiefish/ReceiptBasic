@@ -7,6 +7,7 @@ class Storage
 public:
   void begin();
   String getRandomCardPath(const String &cmc);
+  String getRandomCardPath(int cmc);
 
 private:
   bool getIndexFile(File &index_file, const String &dir);

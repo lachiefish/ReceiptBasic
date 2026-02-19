@@ -15,9 +15,10 @@ void Display::begin()
   {
     Serial.println(F("[DISPLAY] SSD1306 allocation failed"));
     for (;;)
-      ; // Don't proceed, loop forever
+      ;
   }
   Serial.println(F("[DISPLAY] SSD1306 initialised"));
+  oled.clearDisplay();
 }
 
 void Display::update()
@@ -52,6 +53,11 @@ void Display::showCMC(const String &cmc)
   oled.setCursor(getCenteredX(cmc_text, 3), 20);
   oled.print(cmc_text);
   oled.display();
+}
+
+void Display::showCMC(int cmc)
+{
+  showCMC(String(cmc));
 }
 
 void Display::showTimedMessage(const String &message, unsigned long duration_ms)

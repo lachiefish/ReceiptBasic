@@ -10,6 +10,7 @@ public:
   void clear();
   void invertDisplay(bool inverted);
   void showCMC(const String &cmc);
+  void showCMC(int cmc);
   void showTimedMessage(const String &message, unsigned long duration_ms);
 
   bool isShowingTimedMessage();

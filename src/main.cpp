@@ -26,9 +26,8 @@ void loop()
   if (input.isButtonPressed())
   {
     display.invertDisplay(true);
-    delay(300);
-    display.invertDisplay(false);
     String file = storage.getRandomCardPath(String(current_cmc));
+    display.invertDisplay(false);
     display.showTimedMessage(file.substring(7), 2000);
     Serial.print("[MAIN] Printing file: ");
     Serial.println(file);

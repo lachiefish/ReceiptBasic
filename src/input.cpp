@@ -15,7 +15,7 @@ void Input::begin()
 int Input::getCurrentCMC() // #TODO dont track CMC with count, when constrained it doesn't go down until count goes below MAX_CMC
 {
   static int last_count = 0;
-  int count = encoder.getCount() / 4; // Assuming 4 counts per revolution for a full quadrature encoder
+  int count = encoder.getCount() / 4;
   if (count != last_count)
   {
     last_count = count;

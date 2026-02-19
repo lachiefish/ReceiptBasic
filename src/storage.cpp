@@ -55,6 +55,11 @@ String Storage::getRandomCardPath(const String &cmc)
   return dir_path + "/" + selected_file;
 }
 
+String Storage::getRandomCardPath(int cmc)
+{
+  return getRandomCardPath(String(cmc));
+}
+
 int Storage::getNumFilesInDir(const String &dir_path)
 {
   File index_file;
