@@ -18,7 +18,6 @@ void Display::begin()
       ;
   }
   Serial.println(F("[DISPLAY] SSD1306 initialised"));
-  oled.clearDisplay();
 }
 
 void Display::update()
