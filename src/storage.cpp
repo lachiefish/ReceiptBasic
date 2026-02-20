@@ -53,7 +53,7 @@ bool Storage::getRandomIndexEntry(const String &dir_path, String &selected_card_
 
   int num_files = parseFileCount(index_file);
 
-  if (num_files == 0)
+  if (num_files <= 0)
   {
     Serial.println(F("[STORAGE] Found zero files"));
     return false;
