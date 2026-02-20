@@ -59,19 +59,19 @@ void Display::showCMC(int cmc)
   showCMC(String(cmc));
 }
 
-void Display::showTimedMessage(const String &message, unsigned long duration_ms, int size, bool centered)
+void Display::showTimedMessage(const String &text, unsigned long duration_ms, int size, bool centered)
 {
   oled.clearDisplay();
   oled.setTextSize(size);
   if (centered)
   {
-    oled.setCursor(getCenteredX(message, size), 16);
+    oled.setCursor(getCenteredX(text, size), 16);
   }
   else
   {
     oled.setCursor(0, 16);
   }
-  oled.println(message);
+  oled.println(text);
   oled.display();
 
   showing_timed_message = true;
@@ -86,6 +86,11 @@ bool Display::isShowingTimedMessage()
 void Display::dimDisplay(bool dim)
 {
   oled.dim(dim);
+}
+
+String Display::wordWrap(const String &text, int size)
+{
+  return text;
 }
 
 int Display::getCenteredX(const String &text, int size)
