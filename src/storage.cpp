@@ -76,7 +76,7 @@ bool Storage::getRandomIndexEntry(const String &dir_path, String &selected_card_
     return false;
   }
 
-  Serial.print(F("[STORAGE] From index "));
+  Serial.print(F("[STORAGE] Randomly selected from index "));
   Serial.print(random_index);
   Serial.print(F(": "));
   Serial.println(selected_card_file_name);
