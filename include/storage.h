@@ -11,7 +11,7 @@ public:
 
 private:
   bool getIndexFile(File &index_file, const String &dir);
-  bool getRandomIndexEntry(const String &dir_path, String &selected_card_path);
+  bool getRandomIndexEntry(const String &dir_path, String &selected_card_file_name);
   int parseFileCount(File &index_file);
 };
 
