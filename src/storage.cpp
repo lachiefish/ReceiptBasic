@@ -43,6 +43,11 @@ String Storage::getRandomCardPath(const String &cmc)
   return dir_path + "/" + selected_card_file_name;
 }
 
+String Storage::getRandomCardPath(int cmc)
+{
+  return getRandomCardPath(String(cmc));
+}
+
 bool Storage::getRandomIndexEntry(const String &dir_path, String &selected_card_file_name)
 {
   File index_file;
@@ -82,11 +87,6 @@ bool Storage::getRandomIndexEntry(const String &dir_path, String &selected_card_
   Serial.println(selected_card_file_name);
 
   return true;
-}
-
-String Storage::getRandomCardPath(int cmc)
-{
-  return getRandomCardPath(String(cmc));
 }
 
 bool Storage::getIndexFile(File &index_file, const String &dir_path)
