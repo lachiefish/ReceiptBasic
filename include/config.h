@@ -7,6 +7,7 @@
 #define OLED_SDA_PIN 19
 #define OLED_SCL_PIN 20
 #define OLED_I2C_ADDRESS 0x3C
+#define OLED_CHAR_WIDTH 6
 
 // SD Card
 #define SD_CMD_PIN 38

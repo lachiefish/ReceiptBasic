@@ -11,7 +11,8 @@ public:
   void invertDisplay(bool inverted);
   void showCMC(const String &cmc);
   void showCMC(int cmc);
-  void showTimedMessage(const String &message, unsigned long duration_ms);
+  void showTimedMessage(const String &message, unsigned long duration_ms, int size = 1, bool centered = true);
+  void dimDisplay(bool dim);
 
   bool isShowingTimedMessage();
 
@@ -20,7 +21,7 @@ private:
   bool showing_timed_message = false;
   unsigned long message_end_time = 0;
 
-  int getCenteredX(const String &text, int textSize);
+  int getCenteredX(const String &text, int size);
 };
 
 extern Display display;
