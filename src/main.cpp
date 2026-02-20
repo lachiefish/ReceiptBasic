@@ -12,6 +12,14 @@ void setup()
   input.begin();
 }
 
+// Util
+String cardPathToCardName(const String &card_path)
+{
+  int start = card_path.lastIndexOf('/') + 1;
+  int end = card_path.lastIndexOf('.');
+  return card_path.substring(start, end);
+}
+
 void loop()
 {
   display.update(); // Update display state?
@@ -26,10 +34,10 @@ void loop()
   if (input.isButtonPressed())
   {
     display.invertDisplay(true);
-    String file = storage.getRandomCardPath(String(current_cmc));
+    String card_path = storage.getRandomCardPath(String(current_cmc));
     display.invertDisplay(false);
-    display.showTimedMessage(file.substring(7), 2000);
+    display.showTimedMessage(cardPathToCardName(card_path), 2000, 2);
     Serial.print("[MAIN] Printing file: ");
-    Serial.println(file);
+    Serial.println(card_path);
   }
 }
