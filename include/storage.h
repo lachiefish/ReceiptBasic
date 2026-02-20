@@ -11,8 +11,8 @@ public:
 
 private:
   bool getIndexFile(File &index_file, const String &dir);
-  int getNumFilesInDir(const String &dir);
-  String getFileNameFromDir(const String &dir, int index);
+  bool getRandomIndexEntry(const String &dir_path, String &selected_card_path);
+  int parseFileCount(File &index_file);
 };
 
 extern Storage storage;
