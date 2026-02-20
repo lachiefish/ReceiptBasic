@@ -41,16 +41,21 @@ void Display::invertDisplay(bool inverted)
 
 void Display::showCMC(const String &cmc)
 {
+  int cmc_size = 3;
+  int title_size = 1;
   oled.clearDisplay();
   oled.setTextColor(SSD1306_WHITE);
-  oled.setTextSize(1);
+
+  oled.setTextSize(title_size);
   String title = "MOMIR BASIC";
-  oled.setCursor(getCenteredX(title, 1), 0);
+  oled.setCursor(getCenteredX(title, title_size), 0);
   oled.print(title);
-  oled.setTextSize(3);
+
+  oled.setTextSize(cmc_size);
   String cmc_text = "CMC: " + cmc;
-  oled.setCursor(getCenteredX(cmc_text, 3), 20);
+  oled.setCursor(getCenteredX(cmc_text, cmc_size), 20);
   oled.print(cmc_text);
+
   oled.display();
 }
 
