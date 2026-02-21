@@ -76,7 +76,7 @@ void Display::showTimedMessage(const String &text, unsigned long duration_ms, in
   {
     oled.setCursor(0, 16);
   }
-  oled.println(text);
+  oled.println(wordWrap(text, size));
   oled.display();
 
   showing_timed_message = true;
@@ -95,7 +95,41 @@ void Display::dimDisplay(bool dim)
 
 String Display::wordWrap(const String &text, int size)
 {
-  return text;
+  String wrapped = text;
+  unsigned int text_length = text.length();
+  int line_char_length = OLED_SCREEN_WIDTH / (OLED_CHAR_WIDTH * size);
+
+  int last_space_index = -1;
+  // int last_word_index = 0;
+  int current_line_length = 0;
+  for (unsigned int i = 0; i < text_length; i++)
+  {
+    char c = wrapped.charAt(i);
+
+    if (c == '\n')
+    {
+      current_line_length = 0;
+      last_space_index = -1;
+      continue;
+    }
+
+    current_line_length++;
+
+    if (c == ' ')
+    {
+      last_space_index = i;
+    }
+
+    if (current_line_length > line_char_length && last_space_index != -1)
+    {
+      wrapped.setCharAt(last_space_index, '\n');
+      last_space_index = -1;
+      current_line_length = 0;
+      i = last_space_index;
+    }
+  }
+
+  return wrapped;
 }
 
 int Display::getCenteredX(const String &text, int size)
