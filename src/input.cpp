@@ -12,26 +12,32 @@ void Input::begin()
   Serial.println(F("[INPUT] Encoder initialised"));
 }
 
-int Input::getCurrentCMC() // #TODO dont track CMC with count, when constrained it doesn't go down until count goes below MAX_CMC
+int Input::getCurrentCMC()
 {
-  static int last_count = 0;
   int count = encoder.getCount() / 4;
   if (count != last_count)
   {
+    if (count > last_count)
+    {
+      cmc++;
+    }
+    if (count < last_count)
+    {
+      cmc--;
+    }
     last_count = count;
     Serial.print(F("[INPUT] Count: "));
     Serial.println(count);
   }
-  int cmc = constrainCMC(count);
-  return constrainCMC(count);
+  cmc = constrainCMC(cmc);
+  return cmc;
 }
 
 bool Input::isButtonPressed()
 {
-  static bool lastState = HIGH;
-  bool currentState = digitalRead(ENCODER_SW_PIN);
+  bool current_button_state = digitalRead(ENCODER_SW_PIN);
 
-  if (lastState == HIGH && currentState == LOW)
+  if (last_button_state == HIGH && current_button_state == LOW)
   {
     delay(50); // Debounce
     if (digitalRead(ENCODER_SW_PIN) == LOW)
@@ -40,11 +46,11 @@ bool Input::isButtonPressed()
       while (digitalRead(ENCODER_SW_PIN) == LOW)
         ; // Wait for release
       Serial.println(F("[INPUT] Button released"));
-      lastState = HIGH;
+      last_button_state = HIGH;
       return true;
     }
   }
-  lastState = currentState;
+  last_button_state = current_button_state;
   return false;
 }
 

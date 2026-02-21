@@ -10,6 +10,9 @@ public:
 
 private:
   ESP32Encoder encoder;
+  int last_count = 0;
+  int cmc = 0;
+  bool last_button_state = true;
 
   int constrainCMC(int cmc);
 };
