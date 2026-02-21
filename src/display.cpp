@@ -100,7 +100,6 @@ String Display::wordWrap(const String &text, int size)
   int line_char_length = OLED_SCREEN_WIDTH / (OLED_CHAR_WIDTH * size);
 
   int last_space_index = -1;
-  // int last_word_index = 0;
   int current_line_length = 0;
   for (unsigned int i = 0; i < text_length; i++)
   {
