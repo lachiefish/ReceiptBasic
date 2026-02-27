@@ -25,5 +25,10 @@
 #define ENCODER_DT_PIN 4
 #define ENCODER_SW_PIN 6
 
+// Printer
+#define PRINTER_RX_PIN 18
+#define PRINTER_TX_PIN 17
+#define PRINTER_BAUD 9600
+
 // CMC limits
 #define MAX_CMC 16

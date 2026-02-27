@@ -2,6 +2,7 @@
 #include "display.h"
 #include "input.h"
 #include "storage.h"
+#include "printer.h"
 
 void setup()
 {
@@ -10,6 +11,7 @@ void setup()
   display.begin();
   display.clear();
   input.begin();
+  printer.begin();
 }
 
 // Util
