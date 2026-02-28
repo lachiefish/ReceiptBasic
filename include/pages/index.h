@@ -337,8 +337,9 @@ static const char INDEX_HTML[] PROGMEM = R"rawliteral(
 
   function confirmPrint() {
     if (!pendingPath || printing) return;
+    const path = pendingPath;
     closePreview();
-    printCard(pendingPath);
+    printCard(path);
   }
 
   function printCard(path) {
