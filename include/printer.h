@@ -1,15 +1,14 @@
 #pragma once
-#include <Adafruit_Thermal.h>
+#include <Arduino.h>
 
 class Printer
 {
 public:
   Printer();
   void begin();
-  void printCardBitmap(int width, int height, byte bmp[]);
+  void printBitmapRaw(const String &image_path);
 
 private:
-  Adafruit_Thermal thermal;
 };
 
 extern Printer printer;

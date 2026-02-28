@@ -41,5 +41,6 @@ void loop()
     display.showTimedMessage(cardPathToCardName(card_path), 2000, 2);
     Serial.print("[MAIN] Printing file: ");
     Serial.println(card_path);
+    printer.printBitmapRaw(card_path);
   }
 }
