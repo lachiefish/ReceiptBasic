@@ -57,7 +57,7 @@ void Printer::printBitmapRaw(const String &image_path)
 
   file.close();
 
-  lineFeed(4);
+  lineFeed(3);
 }
 
 void Printer::bmpMode()
