@@ -104,9 +104,19 @@ if __name__ == "__main__":
     script_dir = Path(__file__).parent
     data_dir = script_dir.parent  # /data
 
+    # Convert creature cards
     source_dir = data_dir / "cards_fullres"
     output_dir = data_dir / "cards"
-
     print(f"Source: {source_dir}")
     print(f"Output: {output_dir}\n")
     convert_to_monochrome(source_dir, output_dir)
+
+    # Convert tokens
+    tokens_source = data_dir / "tokens_fullres"
+    tokens_output = data_dir / "tokens"
+    if tokens_source.exists():
+        print(f"\nSource: {tokens_source}")
+        print(f"Output: {tokens_output}\n")
+        convert_to_monochrome(tokens_source, tokens_output)
+    else:
+        print(f"\nSkipping tokens (no {tokens_source} folder found)")

@@ -46,7 +46,17 @@ def list_files_in_folder(folder_path, output_file="index.txt"):
 
 
 if __name__ == "__main__":
-    # Target the ../cards folder relative to script location
     script_dir = Path(__file__).parent
-    target_folder = script_dir / "../cards"
-    list_files_in_folder(target_folder)
+
+    # Index creature cards
+    cards_folder = script_dir / "../cards"
+    print("=== Indexing cards ===")
+    list_files_in_folder(cards_folder)
+
+    # Index tokens
+    tokens_folder = script_dir / "../tokens"
+    if tokens_folder.exists():
+        print("\n=== Indexing tokens ===")
+        list_files_in_folder(tokens_folder)
+    else:
+        print(f"\nSkipping tokens (no {tokens_folder} folder found)")
