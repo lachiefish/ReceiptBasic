@@ -8,6 +8,8 @@ Printer::Printer() {}
 void Printer::begin()
 {
   Serial1.begin(PRINTER_BAUD, SERIAL_8N1, PRINTER_RX_PIN, PRINTER_TX_PIN);
+  reset();
+  Serial.println(F("[PRINTER] Printer initialised"));
 }
 
 void Printer::reset()
@@ -50,6 +52,8 @@ void Printer::printBitmapRaw(const String &image_path)
 
   bmpMode();
 
+  Serial.println(F("[PRINTER] Writting bytes to serial"));
+
   for (int i = 0; i < 25680; i++) // 25680 = 48 * 535 (48 * 8px width, 535 height)
   {
     Serial1.write(~file.read());
@@ -71,6 +75,7 @@ void Printer::bmpMode()
   Serial1.write(0);    // xH (width high byte)
   Serial1.write(23);   // yL (height low byte)
   Serial1.write(2);    // yH (height high byte) (e.g. 2*256 + 23 = height)
+  Serial.println(F("[PRINTER] Printer set to BMP mode"));
 }
 
 Printer printer;
