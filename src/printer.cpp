@@ -10,6 +10,34 @@ void Printer::begin()
   Serial1.begin(PRINTER_BAUD, SERIAL_8N1, PRINTER_RX_PIN, PRINTER_TX_PIN);
 }
 
+void Printer::reset()
+{
+  Serial1.write(0x1b);
+  Serial1.write(0x40); // Reset
+}
+
+void Printer::lineFeed(int num_lines)
+{
+  reset();
+  for (int i = num_lines; i > 0; i--)
+  {
+    Serial1.write(0x0A); // Line feed
+  }
+}
+
+void Printer::print(const String &text)
+{
+  reset();
+  Serial1.print(text);
+}
+
+void Printer::printLine(const String &text)
+{
+  reset();
+  print(text);
+  lineFeed();
+}
+
 void Printer::printBitmapRaw(const String &image_path)
 {
   File file = SD_MMC.open(image_path);
@@ -20,9 +48,21 @@ void Printer::printBitmapRaw(const String &image_path)
     return;
   }
 
-  Serial1.write(0x1b);
-  Serial1.write(0x40); // Reset
+  bmpMode();
 
+  for (int i = 0; i < 25680; i++) // 25680 = 48 * 535 (48 * 8px width, 535 height)
+  {
+    Serial1.write(~file.read());
+  }
+
+  file.close();
+
+  lineFeed(4);
+}
+
+void Printer::bmpMode()
+{
+  reset();
   Serial1.write(0x1d); // GS -|
   Serial1.write(0x76); // v   |- Bitmap horizontal modulus data print
   Serial1.write(0x30); // 0  -|
@@ -31,18 +71,6 @@ void Printer::printBitmapRaw(const String &image_path)
   Serial1.write(0);    // xH (width high byte)
   Serial1.write(23);   // yL (height low byte)
   Serial1.write(2);    // yH (height high byte) (e.g. 2*256 + 23 = height)
-
-  for (int i = 0; i < 25680; i++) // 25680 = 48 * 535
-  {
-    Serial1.write(~file.read());
-  }
-
-  file.close();
-
-  Serial1.write(0x0A); // Line feed
-  Serial1.write(0x0A);
-  Serial1.write(0x0A);
-  Serial1.write(0x0A);
 }
 
 Printer printer;
