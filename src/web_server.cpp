@@ -1,5 +1,5 @@
 #include "web_server.h"
-#include "printer.h"
+#include "printer.h" // #TODO: Need to fix this tight coupling
 
 WebServer::WebServer() : server(80)
 {
