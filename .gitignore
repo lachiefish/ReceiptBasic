@@ -7,5 +7,6 @@
 data/*
 !data/scripts/
 data/scripts/creatures.json
+data/scripts/tokens.json
 
 *.bak
