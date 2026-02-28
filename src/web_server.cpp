@@ -71,6 +71,7 @@ void WebServer::handlePrint(AsyncWebServerRequest *request)
     request->send(400, "application/json", "{\"error\":\"Path does not exist\"}");
     return;
   }
+  file.close();
 
   Serial.print(F("[WEB SERVER] POST /print — "));
   Serial.println(path);
