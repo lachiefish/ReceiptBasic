@@ -35,7 +35,7 @@ void loop()
 
   int current_cmc = input.getCurrentCMC();
   display.showCMC(String(current_cmc));
-  if (input.isButtonPressed())
+  if (input.isButtonPressed() && !printer.busy())
   {
     display.invertDisplay(true);
     String card_path = storage.getRandomCardPath(String(current_cmc));

@@ -12,6 +12,8 @@ void Printer::begin()
   Serial.println(F("[PRINTER] Printer initialised"));
 }
 
+bool Printer::busy() const { return _busy.load(); }
+
 void Printer::reset()
 {
   Serial1.write(0x1b);
@@ -42,11 +44,14 @@ void Printer::printLine(const String &text)
 
 void Printer::printBitmapRaw(const String &image_path)
 {
+  _busy.store(true);
+
   File file = SD_MMC.open(image_path);
   if (!file)
   {
     Serial.print(F("[PRINTER] Failed to open image at: "));
     Serial.println(image_path);
+    _busy.store(false);
     return;
   }
 
@@ -62,6 +67,8 @@ void Printer::printBitmapRaw(const String &image_path)
   file.close();
 
   lineFeed(3);
+
+  _busy.store(false);
 }
 
 void Printer::bmpMode()

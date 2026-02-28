@@ -351,9 +351,12 @@ static const char INDEX_HTML[] PROGMEM = R"rawliteral(
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: 'path=' + encodeURIComponent(path)
     })
-    .then(r => r.json())
+    .then(r => {
+      if (!r.ok) return r.json().then(j => { throw new Error(j.error || 'Print failed'); });
+      return r.json();
+    })
     .then(() => { showStatus('Printed!', 'success', 3000); })
-    .catch(() => { showStatus('Error!', 'error', 3000); })
+    .catch(e => { showStatus(e.message || 'Error!', 'error', 3000); })
     .finally(() => { printing = false; });
   }
 

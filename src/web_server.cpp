@@ -55,7 +55,23 @@ void WebServer::handlePrint(AsyncWebServerRequest *request)
     return;
   }
 
+  if (printer.busy())
+  {
+    Serial.println(F("[WEB SERVER] POST /print — busy, rejecting"));
+    request->send(409, "application/json", "{\"error\":\"Printer is busy\"}");
+    return;
+  }
+
   String path = request->getParam("path", true)->value();
+
+  File file = SD_MMC.open(path);
+  if (!file)
+  {
+    Serial.println(F("[WEB SERVER] POST /print — path does not exist"));
+    request->send(400, "application/json", "{\"error\":\"Path does not exist\"}");
+    return;
+  }
+
   Serial.print(F("[WEB SERVER] POST /print — "));
   Serial.println(path);
   request->send(200, "application/json", "{\"status\":\"printed\"}");
