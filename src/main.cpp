@@ -3,6 +3,7 @@
 #include "input.h"
 #include "storage.h"
 #include "printer.h"
+#include "web_server.h"
 
 void setup()
 {
@@ -12,6 +13,7 @@ void setup()
   display.clear();
   input.begin();
   printer.begin();
+  web_server.begin();
 }
 
 // Util
