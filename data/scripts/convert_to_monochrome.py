@@ -1,5 +1,5 @@
 from pathlib import Path
-from PIL import Image
+from PIL import Image, ImageEnhance
 import sys
 import shutil
 import time
@@ -40,7 +40,9 @@ def convert_to_monochrome(source_dir, output_dir):
         print("No .jpg files found in cards_fullres/")
         return
 
-    print(f"Converting {total} images to {THERMAL_WIDTH}px wide monochrome BMP...\n")
+    print(
+        f"Converting {total} images to {THERMAL_WIDTH}px wide monochrome RAW binary...\n"
+    )
 
     converted = 0
     skipped = 0
@@ -48,9 +50,9 @@ def convert_to_monochrome(source_dir, output_dir):
     start_time = time.time()
 
     for img_path in images:
-        # Preserve cmc/filename structure: cards_fullres/3/Bear.jpg -> cards/3/Bear.bmp
+        # Preserve cmc/filename structure: cards_fullres/3/Bear.jpg -> cards/3/Bear.bin
         relative = img_path.relative_to(source_dir)
-        out_path = output_dir / relative.with_suffix(".bmp")
+        out_path = output_dir / relative.with_suffix(".bin")
 
         if out_path.exists():
             skipped += 1
@@ -68,11 +70,20 @@ def convert_to_monochrome(source_dir, output_dir):
                 # Resize with high-quality resampling
                 img_resized = img.resize((THERMAL_WIDTH, new_height), Image.LANCZOS)
 
-                # Convert to greyscale then to 1-bit monochrome with dithering
-                img_mono = img_resized.convert("L").convert("1")
+                # Convert to greyscale
+                img_gray = img_resized.convert("L")
 
-                # Save as BMP
-                img_mono.save(out_path, format="BMP")
+                # Enhance contrast for crisp, readable text
+                enhancer = ImageEnhance.Contrast(img_gray)
+                img_gray = enhancer.enhance(1.5)  # 1.5x contrast boost
+
+                # Convert to 1-bit monochrome with fixed threshold
+                img_mono = img_gray.convert("1")
+
+                # Save as raw binary (1 bit per pixel, 8 pixels per byte)
+                img_array = img_mono.tobytes()
+                with open(out_path, "wb") as f:
+                    f.write(img_array)
 
             converted += 1
         except Exception as e:
