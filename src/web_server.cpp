@@ -78,7 +78,7 @@ void WebServer::handleGetCards(AsyncWebServerRequest *request)
   if (request->hasParam("cmc"))
   {
     String cmc = request->getParam("cmc")->value();
-    String path = "/cards/" + cmc + "/index.txt";
+    String path = String(CARDS_PATH) + "/" + cmc + "/index.txt";
     Serial.print(F("[WEB SERVER] GET /api/cards?cmc="));
     Serial.println(cmc);
     request->send(SD_MMC, path.c_str(), "text/plain");
@@ -86,7 +86,7 @@ void WebServer::handleGetCards(AsyncWebServerRequest *request)
   else
   {
     Serial.println(F("[WEB SERVER] GET /api/cards (tokens)"));
-    request->send(SD_MMC, "/tokens/index.txt", "text/plain");
+    request->send(SD_MMC, String(TOKENS_PATH) + "/index.txt", "text/plain");
   }
 }
 

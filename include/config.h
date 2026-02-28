@@ -19,6 +19,7 @@
 #define SD_1_BIT_MODE true
 #define SD_MOUNT_PATH "/sdcard"
 #define CARDS_PATH "/cards"
+#define TOKENS_PATH "/tokens"
 
 // Encoder
 #define ENCODER_CLK_PIN 5 // Swap CLK and DT to reverse direction
