@@ -13,7 +13,6 @@ private:
   AsyncWebServer server;
 
   void setupRoutes();
-  void printToken(const String &token);
 };
 
 extern WebServer web_server;

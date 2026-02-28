@@ -1,4 +1,5 @@
 #include "web_server.h"
+#include "printer.h"
 
 WebServer::WebServer() : server(80)
 {
@@ -11,18 +12,9 @@ void WebServer::begin()
   setupRoutes();
 }
 
-void WebServer::printToken(const String &token)
-{
-  Serial.println("Printing: " + token);
-
-  Serial1.println("TOKEN:");
-  Serial1.println(token);
-  Serial1.println("\n\n\n");
-}
-
 void WebServer::setupRoutes()
 {
-  server.on("/print", HTTP_POST, [this](AsyncWebServerRequest *request)
+  server.on("/print", HTTP_POST, [](AsyncWebServerRequest *request)
             {
 
   if (!request->hasParam("token", true)) {
@@ -32,7 +24,8 @@ void WebServer::setupRoutes()
 
   String token = request->getParam("token", true)->value();
 
-  printToken(token);
+  printer.printLine(token);
+  printer.lineFeed(2);
 
   request->send(200, "application/json", "{\"status\":\"printed\"}"); });
 
