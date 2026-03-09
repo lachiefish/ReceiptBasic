@@ -11,7 +11,7 @@ public:
   void lineFeed(int num_lines = 1);
   void print(const String &text);
   void printLine(const String &text);
-  void printBitmapRaw(const String &image_path);
+  void printBitmapRaw(const uint8_t *data, size_t length);
   bool busy() const;
 
 private:
@@ -19,5 +19,3 @@ private:
 
   void bmpMode();
 };
-
-extern Printer printer;

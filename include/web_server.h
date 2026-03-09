@@ -3,14 +3,19 @@
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 
+class Storage;
+class Printer;
+
 class WebServer
 {
 public:
-  WebServer();
+  WebServer(Storage &storage, Printer &printer);
   void begin();
 
 private:
   AsyncWebServer server;
+  Storage &_storage;
+  Printer &_printer;
 
   void setupRoutes();
   void handlePrint(AsyncWebServerRequest *request);
@@ -20,5 +25,3 @@ private:
   void handleStatusPage(AsyncWebServerRequest *request);
   void handleIndex(AsyncWebServerRequest *request);
 };
-
-extern WebServer web_server;

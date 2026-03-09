@@ -25,5 +25,3 @@ private:
 
   int getCenteredX(const String &text, int size);
 };
-
-extern Display display;

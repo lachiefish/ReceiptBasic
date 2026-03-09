@@ -1,8 +1,6 @@
 #include "storage.h"
 #include "config.h"
 
-Storage storage;
-
 void Storage::begin()
 {
   SD_MMC.setPins(SD_CLK_PIN, SD_CMD_PIN, SD_D0_PIN);
@@ -129,4 +127,105 @@ int Storage::parseFileCount(File &index_file)
   Serial.print(F("[STORAGE] Number of files found: "));
   Serial.println(num_files);
   return num_files;
+}
+
+bool Storage::fileExists(const String &path)
+{
+  File file = SD_MMC.open(path);
+  if (!file)
+  {
+    return false;
+  }
+  file.close();
+  return true;
+}
+
+size_t Storage::readFileBytes(const String &path, uint8_t *&buffer)
+{
+  buffer = nullptr;
+
+  File file = SD_MMC.open(path);
+  if (!file)
+  {
+    Serial.print(F("[STORAGE] Failed to open file: "));
+    Serial.println(path);
+    return 0;
+  }
+
+  size_t file_size = file.size();
+  if (file_size == 0)
+  {
+    Serial.print(F("[STORAGE] File is empty: "));
+    Serial.println(path);
+    file.close();
+    return 0;
+  }
+
+  buffer = (uint8_t *)heap_caps_malloc(file_size, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT);
+  if (!buffer)
+  {
+    buffer = (uint8_t *)malloc(file_size); // Fallback to regular heap if PSRAM unavailable
+  }
+  if (!buffer)
+  {
+    Serial.print(F("[STORAGE] Failed to allocate buffer of size: "));
+    Serial.println(file_size);
+    file.close();
+    return 0;
+  }
+
+  size_t bytes_read = file.read(buffer, file_size);
+  file.close();
+
+  if (bytes_read != file_size)
+  {
+    Serial.print(F("[STORAGE] Read mismatch — expected "));
+    Serial.print(file_size);
+    Serial.print(F(" but got "));
+    Serial.println(bytes_read);
+    free(buffer);
+    buffer = nullptr;
+    return 0;
+  }
+
+  Serial.print(F("[STORAGE] Read "));
+  Serial.print(bytes_read);
+  Serial.print(F(" bytes from: "));
+  Serial.println(path);
+  return bytes_read;
+}
+
+String Storage::readFileAsString(const String &path)
+{
+  File file = SD_MMC.open(path);
+  if (!file)
+  {
+    Serial.print(F("[STORAGE] Failed to open file: "));
+    Serial.println(path);
+    return "";
+  }
+
+  String content = file.readString();
+  file.close();
+
+  Serial.print(F("[STORAGE] Read string ("));
+  Serial.print(content.length());
+  Serial.print(F(" chars) from: "));
+  Serial.println(path);
+  return content;
+}
+
+uint64_t Storage::totalBytes()
+{
+  return SD_MMC.totalBytes();
+}
+
+uint64_t Storage::usedBytes()
+{
+  return SD_MMC.usedBytes();
+}
+
+fs::FS &Storage::getFS()
+{
+  return SD_MMC;
 }

@@ -2,8 +2,6 @@
 #include "config.h"
 #include <Wire.h>
 
-Display display;
-
 Display::Display() : oled(OLED_SCREEN_WIDTH, OLED_SCREEN_HEIGHT, &Wire, OLED_RESET)
 {
 }

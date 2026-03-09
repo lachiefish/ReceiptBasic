@@ -16,5 +16,3 @@ private:
 
   int constrainCMC(int cmc);
 };
-
-extern Input input;

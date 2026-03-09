@@ -2,8 +2,6 @@
 #include "config.h"
 #include <Arduino.h>
 
-Input input;
-
 void Input::begin()
 {
   encoder.attachFullQuad(ENCODER_CLK_PIN, ENCODER_DT_PIN);

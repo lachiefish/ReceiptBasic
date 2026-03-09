@@ -5,6 +5,12 @@
 #include "printer.h"
 #include "web_server.h"
 
+Storage storage;
+Display display;
+Input input;
+Printer printer;
+WebServer web_server(storage, printer);
+
 void setup()
 {
   Serial.begin(115200);
@@ -43,6 +49,17 @@ void loop()
     display.showTimedMessage(cardPathToCardName(card_path), 2000, 2);
     Serial.print("[MAIN] Printing file: ");
     Serial.println(card_path);
-    printer.printBitmapRaw(card_path);
+
+    uint8_t *buffer = nullptr;
+    size_t len = storage.readFileBytes(card_path, buffer);
+    if (len > 0 && buffer)
+    {
+      printer.printBitmapRaw(buffer, len);
+      free(buffer);
+    }
+    else
+    {
+      Serial.println(F("[MAIN] Failed to read image file"));
+    }
   }
 }

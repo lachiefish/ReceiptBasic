@@ -1,7 +1,6 @@
 #include "printer.h"
 #include "config.h"
 #include <Arduino.h>
-#include <SD_MMC.h>
 
 Printer::Printer() {}
 
@@ -42,29 +41,27 @@ void Printer::printLine(const String &text)
   lineFeed();
 }
 
-void Printer::printBitmapRaw(const String &image_path)
+void Printer::printBitmapRaw(const uint8_t *data, size_t length)
 {
   _busy.store(true);
 
-  File file = SD_MMC.open(image_path);
-  if (!file)
+  if (!data || length == 0)
   {
-    Serial.print(F("[PRINTER] Failed to open image at: "));
-    Serial.println(image_path);
+    Serial.println(F("[PRINTER] No image data provided"));
     _busy.store(false);
     return;
   }
 
   bmpMode();
 
-  Serial.println(F("[PRINTER] Writting bytes to serial"));
+  Serial.print(F("[PRINTER] Writing "));
+  Serial.print(length);
+  Serial.println(F(" bytes to serial"));
 
-  for (int i = 0; i < 25680; i++) // 25680 = 48 * 535 (48 * 8px width, 535 height)
+  for (size_t i = 0; i < length; i++)
   {
-    Serial1.write(~file.read());
+    Serial1.write(~data[i]);
   }
-
-  file.close();
 
   lineFeed(3);
 
@@ -84,5 +81,3 @@ void Printer::bmpMode()
   Serial1.write(2);    // yH (height high byte) (e.g. 2*256 + 23 = height)
   Serial.println(F("[PRINTER] Printer set to BMP mode"));
 }
-
-Printer printer;

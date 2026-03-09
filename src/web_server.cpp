@@ -1,13 +1,14 @@
 #include "web_server.h"
 #include "printer.h"
+#include "storage.h"
 #include "config.h"
-#include <SD_MMC.h>
 #include <freertos/task.h>
 
 #include "pages/index.h"
 #include "pages/status.h"
 
-WebServer::WebServer() : server(80)
+WebServer::WebServer(Storage &storage, Printer &printer)
+    : server(80), _storage(storage), _printer(printer)
 {
 }
 
@@ -53,7 +54,7 @@ void WebServer::handlePrint(AsyncWebServerRequest *request)
     return;
   }
 
-  if (printer.busy())
+  if (_printer.busy())
   {
     Serial.println(F("[WEB SERVER] POST /print — busy, rejecting"));
     request->send(409, "application/json", "{\"error\":\"Printer is busy\"}");
@@ -62,47 +63,71 @@ void WebServer::handlePrint(AsyncWebServerRequest *request)
 
   String path = request->getParam("path", true)->value();
 
-  File file = SD_MMC.open(path);
-  if (!file) // #TODO pass in storage to check if file exists
+  if (!_storage.fileExists(path))
   {
     Serial.println(F("[WEB SERVER] POST /print — path does not exist"));
     request->send(400, "application/json", "{\"error\":\"Path does not exist\"}");
     return;
   }
-  file.close();
 
   Serial.print(F("[WEB SERVER] POST /print — "));
   Serial.println(path);
   request->send(200, "application/json", "{\"status\":\"printed\"}");
 
-  String *pathCopy = new String(path);
+  struct PrintTaskParams
+  {
+    String path;
+    Storage &storage;
+    Printer &printer;
+  };
+
+  PrintTaskParams *params = new PrintTaskParams{path, _storage, _printer};
   xTaskCreate([](void *param)
               {
-    String *p = static_cast<String *>(param);
+    PrintTaskParams *p = static_cast<PrintTaskParams *>(param);
     Serial.print(F("[WEB SERVER] Print task started for: "));
-    Serial.println(*p);
-    printer.printBitmapRaw(*p); // #TODO pass in printer??
+    Serial.println(p->path);
+
+    uint8_t *buffer = nullptr;
+    size_t len = p->storage.readFileBytes(p->path, buffer);
+    if (len > 0 && buffer)
+    {
+      p->printer.printBitmapRaw(buffer, len);
+      free(buffer);
+    }
+    else
+    {
+      Serial.println(F("[WEB SERVER] Failed to read image file"));
+    }
+
     Serial.println(F("[WEB SERVER] Print task finished"));
     delete p;
-    vTaskDelete(NULL); }, "print_task", 4096, pathCopy, 1, NULL);
+    vTaskDelete(NULL); }, "print_task", 8192, params, 1, NULL);
 }
 
 // GET /api/cards — serves index.txt; optional ?cmc=N for creature folders
 void WebServer::handleGetCards(AsyncWebServerRequest *request)
 {
+  String path;
   if (request->hasParam("cmc"))
   {
     String cmc = request->getParam("cmc")->value();
-    String path = String(CARDS_PATH) + "/" + cmc + "/index.txt";
+    path = String(CARDS_PATH) + "/" + cmc + "/index.txt";
     Serial.print(F("[WEB SERVER] GET /api/cards?cmc="));
     Serial.println(cmc);
-    request->send(SD_MMC, path.c_str(), "text/plain");
   }
   else
   {
+    path = String(TOKENS_PATH) + "/index.txt";
     Serial.println(F("[WEB SERVER] GET /api/cards (tokens)"));
-    request->send(SD_MMC, String(TOKENS_PATH) + "/index.txt", "text/plain");
   }
+
+  if (!_storage.fileExists(path))
+  {
+    request->send(404, "text/plain", "File not found");
+    return;
+  }
+  request->send(_storage.getFS(), path, "text/plain");
 }
 
 // GET /api/preview?path=/tokens/Foo.bin — serves the raw .bin file from SD
@@ -116,7 +141,13 @@ void WebServer::handlePreview(AsyncWebServerRequest *request)
   String path = request->getParam("path")->value();
   Serial.print(F("[WEB SERVER] GET /api/preview?path="));
   Serial.println(path);
-  request->send(SD_MMC, path.c_str(), "application/octet-stream");
+
+  if (!_storage.fileExists(path))
+  {
+    request->send(404, "text/plain", "File not found");
+    return;
+  }
+  request->send(_storage.getFS(), path, "application/octet-stream");
 }
 
 // GET /api/status — returns system info as JSON
@@ -139,8 +170,8 @@ void WebServer::handleStatus(AsyncWebServerRequest *request)
   uint32_t totalPsram = ESP.getPsramSize();
 
   // SD card
-  uint64_t sdTotal = SD_MMC.totalBytes();
-  uint64_t sdUsed = SD_MMC.usedBytes();
+  uint64_t sdTotal = _storage.totalBytes();
+  uint64_t sdUsed = _storage.usedBytes();
 
   // WiFi
   int clients = WiFi.softAPgetStationNum();
@@ -190,4 +221,3 @@ void WebServer::handleIndex(AsyncWebServerRequest *request)
   request->send(200, "text/html", INDEX_HTML);
 }
 
-WebServer web_server;
