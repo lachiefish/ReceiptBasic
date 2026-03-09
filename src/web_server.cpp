@@ -20,8 +20,6 @@ void WebServer::begin()
   Serial.println(F("[WEB SERVER] Web Server started"));
 }
 
-// ── Route setup ──
-
 void WebServer::setupRoutes()
 {
   server.on("/print", HTTP_POST, [this](AsyncWebServerRequest *request)
@@ -65,7 +63,7 @@ void WebServer::handlePrint(AsyncWebServerRequest *request)
   String path = request->getParam("path", true)->value();
 
   File file = SD_MMC.open(path);
-  if (!file)
+  if (!file) // #TODO pass in storage to check if file exists
   {
     Serial.println(F("[WEB SERVER] POST /print — path does not exist"));
     request->send(400, "application/json", "{\"error\":\"Path does not exist\"}");
@@ -83,7 +81,7 @@ void WebServer::handlePrint(AsyncWebServerRequest *request)
     String *p = static_cast<String *>(param);
     Serial.print(F("[WEB SERVER] Print task started for: "));
     Serial.println(*p);
-    printer.printBitmapRaw(*p);
+    printer.printBitmapRaw(*p); // #TODO pass in printer??
     Serial.println(F("[WEB SERVER] Print task finished"));
     delete p;
     vTaskDelete(NULL); }, "print_task", 4096, pathCopy, 1, NULL);
