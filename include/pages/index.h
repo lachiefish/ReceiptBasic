@@ -145,7 +145,7 @@ static const char INDEX_HTML[] PROGMEM = R"rawliteral(
   <!-- Preview modal -->
   <div id="modal-overlay" onclick="if(event.target===this)closePreview()">
     <div id="modal-title"></div>
-    <div id="preview-loading"><div class="spinner"></div> Loading preview…</div>
+    <div id="preview-loading"><div class="spinner"></div> Loading preview...</div>
     <canvas id="preview-canvas" style="display:none"></canvas>
     <div class="modal-btns">
       <button class="btn-cancel" onclick="closePreview()">Cancel</button>
