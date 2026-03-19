@@ -6,10 +6,10 @@
 class Storage;
 class Printer;
 
-class WebServer
+class PrinterWebServer
 {
 public:
-  WebServer(Storage &storage, Printer &printer);
+  PrinterWebServer(Storage &storage, Printer &printer);
   void begin();
 
 private:

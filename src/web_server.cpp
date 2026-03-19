@@ -1,27 +1,30 @@
+
 #include "web_server.h"
 #include "printer.h"
 #include "storage.h"
 #include "config.h"
 #include <freertos/task.h>
+#include <ElegantOTA.h>
 
 #include "pages/index.h"
 #include "pages/status.h"
 
-WebServer::WebServer(Storage &storage, Printer &printer)
+PrinterWebServer::PrinterWebServer(Storage &storage, Printer &printer)
     : server(80), _storage(storage), _printer(printer)
 {
 }
 
-void WebServer::begin()
+void PrinterWebServer::begin()
 {
   WiFi.softAP("ReceiptBasic", "magicslotmachine");
   Serial.println(F("[WEB SERVER] WiFi started"));
+  ElegantOTA.begin(&server);
   server.begin();
   setupRoutes();
   Serial.println(F("[WEB SERVER] Web Server started"));
 }
 
-void WebServer::setupRoutes()
+void PrinterWebServer::setupRoutes()
 {
   server.on("/print", HTTP_POST, [this](AsyncWebServerRequest *request)
             { handlePrint(request); });
@@ -45,7 +48,7 @@ void WebServer::setupRoutes()
 }
 
 // POST /print — prints the bitmap at the given SD path
-void WebServer::handlePrint(AsyncWebServerRequest *request)
+void PrinterWebServer::handlePrint(AsyncWebServerRequest *request)
 {
   if (!request->hasParam("path", true))
   {
@@ -106,7 +109,7 @@ void WebServer::handlePrint(AsyncWebServerRequest *request)
 }
 
 // GET /api/cards — serves index.txt; optional ?cmc=N for creature folders
-void WebServer::handleGetCards(AsyncWebServerRequest *request)
+void PrinterWebServer::handleGetCards(AsyncWebServerRequest *request)
 {
   String path;
   if (request->hasParam("cmc"))
@@ -131,7 +134,7 @@ void WebServer::handleGetCards(AsyncWebServerRequest *request)
 }
 
 // GET /api/preview?path=/tokens/Foo.bin — serves the raw .bin file from SD
-void WebServer::handlePreview(AsyncWebServerRequest *request)
+void PrinterWebServer::handlePreview(AsyncWebServerRequest *request)
 {
   if (!request->hasParam("path"))
   {
@@ -151,7 +154,7 @@ void WebServer::handlePreview(AsyncWebServerRequest *request)
 }
 
 // GET /api/status — returns system info as JSON
-void WebServer::handleStatus(AsyncWebServerRequest *request)
+void PrinterWebServer::handleStatus(AsyncWebServerRequest *request)
 {
   Serial.println(F("[WEB SERVER] GET /api/status"));
 
@@ -208,16 +211,15 @@ void WebServer::handleStatus(AsyncWebServerRequest *request)
 }
 
 // GET /status — serves the status monitoring page
-void WebServer::handleStatusPage(AsyncWebServerRequest *request)
+void PrinterWebServer::handleStatusPage(AsyncWebServerRequest *request)
 {
   Serial.println(F("[WEB SERVER] GET /status"));
   request->send(200, "text/html", STATUS_HTML);
 }
 
 // GET / — serves the search UI
-void WebServer::handleIndex(AsyncWebServerRequest *request)
+void PrinterWebServer::handleIndex(AsyncWebServerRequest *request)
 {
   Serial.println(F("[WEB SERVER] GET /"));
   request->send(200, "text/html", INDEX_HTML);
 }
-

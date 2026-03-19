@@ -11,7 +11,7 @@ Display display;
 Input input;
 Printer printer;
 Power power;
-WebServer web_server(storage, printer);
+PrinterWebServer web_server(storage, printer);
 
 void setup()
 {
