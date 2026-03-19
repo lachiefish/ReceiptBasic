@@ -49,7 +49,7 @@ void loop()
   }
 
   int current_cmc = input.getCurrentCMC();
-  display.showCMC(String(current_cmc));
+  display.showCMC(current_cmc);
   if (input.isButtonPressed() && !printer.busy())
   {
     display.invertDisplay(true);
