@@ -41,6 +41,7 @@ void Display::showCMC(const String &cmc)
 {
   int cmc_size = 3;
   int title_size = 1;
+  int battery_size = 1;
   oled.clearDisplay();
   oled.setTextColor(SSD1306_WHITE);
 
@@ -51,8 +52,15 @@ void Display::showCMC(const String &cmc)
 
   oled.setTextSize(cmc_size);
   String cmc_text = "CMC: " + cmc;
-  oled.setCursor(getCenteredX(cmc_text, cmc_size), 20);
+  oled.setCursor(getCenteredX(cmc_text, cmc_size), 18);
   oled.print(cmc_text);
+
+  oled.setTextSize(battery_size);
+  String battery_text = battery_voltage >= 0.0f
+                            ? "BAT: " + String(battery_voltage, 2) + "V"
+                            : "BAT: --.-V";
+  oled.setCursor(getCenteredX(battery_text, battery_size), OLED_SCREEN_HEIGHT - (OLED_CHAR_HEIGHT * battery_size));
+  oled.print(battery_text);
 
   oled.display();
 }
@@ -60,6 +68,11 @@ void Display::showCMC(const String &cmc)
 void Display::showCMC(int cmc)
 {
   showCMC(String(cmc));
+}
+
+void Display::setBatteryVoltage(float voltage)
+{
+  battery_voltage = voltage;
 }
 
 void Display::showTimedMessage(const String &text, unsigned long duration_ms, int size, bool centered)

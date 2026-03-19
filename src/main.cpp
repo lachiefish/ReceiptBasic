@@ -3,12 +3,14 @@
 #include "input.h"
 #include "storage.h"
 #include "printer.h"
+#include "power.h"
 #include "web_server.h"
 
 Storage storage;
 Display display;
 Input input;
 Printer printer;
+Power power;
 WebServer web_server(storage, printer);
 
 void setup()
@@ -17,6 +19,7 @@ void setup()
   storage.begin();
   display.begin();
   display.clear();
+  power.begin();
   input.begin();
   printer.begin();
   web_server.begin();
@@ -32,6 +35,12 @@ String cardPathToCardName(const String &card_path)
 
 void loop()
 {
+  power.update();
+  if (power.hasValidReading())
+  {
+    display.setBatteryVoltage(power.getBatteryVoltage());
+  }
+
   display.update(); // Update display state?
 
   if (display.isShowingTimedMessage())
