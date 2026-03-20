@@ -1,18 +1,5 @@
 #include "ftp_server.h"
-
-#include <Arduino.h>
-#include <WiFi.h>
-
 #include "config.h"
-
-#define FTP_SERVER_NETWORK_TYPE DEFAULT_FTP_SERVER_NETWORK_TYPE_ESP32
-#define STORAGE_TYPE STORAGE_SD_MMC
-#include <SimpleFTPServer.h>
-
-namespace
-{
-  FtpServer ftp_server_instance;
-}
 
 void FTPServer::begin()
 {
@@ -27,11 +14,6 @@ void FTPServer::begin()
 void FTPServer::update()
 {
   if (!started)
-  {
-    return;
-  }
-
-  if (WiFi.softAPgetStationNum() <= 0)
   {
     return;
   }
