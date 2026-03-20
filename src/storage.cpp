@@ -7,8 +7,7 @@ void Storage::begin()
   if (!SD_MMC.begin(SD_MOUNT_PATH, SD_1_BIT_MODE, SD_FORMAT_IF_MOUNT_FAILED, SDMMC_FREQ_DEFAULT, SD_MAX_FILES_OPEN))
   {
     Serial.println(F("[STORAGE] SD card mount failed"));
-    for (;;)
-      ;
+    return;
   }
   Serial.println(F("[STORAGE] SD card mounted"));
 

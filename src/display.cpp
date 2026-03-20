@@ -12,8 +12,7 @@ void Display::begin()
   if (!oled.begin(SSD1306_SWITCHCAPVCC, OLED_I2C_ADDRESS))
   {
     Serial.println(F("[DISPLAY] SSD1306 allocation failed"));
-    for (;;)
-      ;
+    return;
   }
   Serial.println(F("[DISPLAY] SSD1306 initialised"));
 }
