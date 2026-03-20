@@ -5,6 +5,7 @@
 #include "config.h"
 #include <freertos/task.h>
 #include <ElegantOTA.h>
+#include <WebSerial.h>
 
 #include "pages/index.h"
 #include "pages/status.h"
@@ -19,9 +20,14 @@ void PrinterWebServer::begin()
   WiFi.softAP("ReceiptBasic", "magicslotmachine");
   Serial.println(F("[WEB SERVER] WiFi started"));
   ElegantOTA.begin(&server);
+  WebSerial.begin(&server);
   server.begin();
   setupRoutes();
   Serial.println(F("[WEB SERVER] Web Server started"));
+}
+
+void PrinterWebServer::update() {
+  WebSerial.loop();
 }
 
 void PrinterWebServer::setupRoutes()

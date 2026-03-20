@@ -40,5 +40,9 @@
 #define PRINTER_TX_PIN 17
 #define PRINTER_BAUD 9600
 
+// FTP server
+#define FTP_USERNAME "receipt"
+#define FTP_PASSWORD "basic"
+
 // CMC limits
 #define MAX_CMC 16

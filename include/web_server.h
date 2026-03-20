@@ -11,6 +11,7 @@ class PrinterWebServer
 public:
   PrinterWebServer(Storage &storage, Printer &printer);
   void begin();
+  void update();
 
 private:
   AsyncWebServer server;

@@ -5,6 +5,7 @@
 #include "printer.h"
 #include "power.h"
 #include "web_server.h"
+#include "ftp_server.h"
 
 Storage storage;
 Display display;
@@ -12,6 +13,7 @@ Input input;
 Printer printer;
 Power power;
 PrinterWebServer web_server(storage, printer);
+FTPServer ftp_server;
 
 void setup()
 {
@@ -23,6 +25,7 @@ void setup()
   input.begin();
   printer.begin();
   web_server.begin();
+  ftp_server.begin();
 }
 
 // Util
@@ -35,6 +38,9 @@ String cardPathToCardName(const String &card_path)
 
 void loop()
 {
+  web_server.update();
+  ftp_server.update();
+
   power.update();
   if (power.hasValidReading())
   {
