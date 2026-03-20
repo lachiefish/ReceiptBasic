@@ -54,10 +54,10 @@ def convert_to_monochrome(source_dir, output_dir):
         relative = img_path.relative_to(source_dir)
         out_path = output_dir / relative.with_suffix(".bin")
 
-        if out_path.exists():
-            skipped += 1
-            print_progress(converted + skipped + failed, total, skipped, start_time)
-            continue
+        # if out_path.exists():
+        #     skipped += 1
+        #     print_progress(converted + skipped + failed, total, skipped, start_time)
+        #     continue
 
         try:
             out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -75,7 +75,7 @@ def convert_to_monochrome(source_dir, output_dir):
 
                 # Enhance contrast for crisp, readable text
                 enhancer = ImageEnhance.Contrast(img_gray)
-                img_gray = enhancer.enhance(1.5)  # 1.5x contrast boost
+                img_gray = enhancer.enhance(1.75)  # Contrast boost
 
                 # Convert to 1-bit monochrome with fixed threshold
                 img_mono = img_gray.convert("1")
