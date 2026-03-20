@@ -1,5 +1,6 @@
 #include "ftp_server.h"
 #include "config.h"
+#include <WiFi.h>
 
 void FTPServer::begin()
 {
@@ -14,6 +15,11 @@ void FTPServer::begin()
 void FTPServer::update()
 {
   if (!started)
+  {
+    return;
+  }
+
+  if (WiFi.softAPgetStationNum() <= 0)
   {
     return;
   }
