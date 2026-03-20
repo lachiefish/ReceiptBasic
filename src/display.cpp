@@ -57,10 +57,10 @@ void Display::showCMC(const String &cmc)
 
   oled.setTextSize(battery_size);
   String battery_text = battery_voltage >= 0.0f
-                            ? "BAT: " + String(battery_voltage, 2) + "V"
+                            ? "BAT: " + String(battery_voltage, 2) + "V / " + String(battery_voltage / BATTERY_CELL_COUNT, 2) + "V"
                             : "BAT: --.-V";
   oled.setCursor(getCenteredX(battery_text, battery_size), OLED_SCREEN_HEIGHT - (OLED_CHAR_HEIGHT * battery_size));
-  oled.print(battery_text);
+  oled.print(battery_text); // #TODO refactor battery voltage display
 
   oled.display();
 }
