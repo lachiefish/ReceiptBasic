@@ -1,6 +1,6 @@
 # ReceiptBasic
 
-A custom hardware/software prototype for instantly generating and printing randomized Magic: The Gathering creature tokens via a thermal receipt printer.
+A custom hardware/software prototype for instantly generating and printing randomised Magic: The Gathering creature tokens via a thermal receipt printer.
 
 > **Note**: This is a personal hobby project created as an exercise in full-stack embedded development, from data ingestion pipelines to hardware integration. It is proudly presented as a portfolio piece to demonstrate my skills and is not intended for public consumption or production use.
 
@@ -27,11 +27,11 @@ A custom hardware/software prototype for instantly generating and printing rando
 - **Python (Data Generation Tooling):** Custom tooling (`scripts/`) built with `PIL` (Pillow) and `requests` to:
   - Query card data APIs and curate token/creature datasets.
   - Scale down artwork to strictly match the 384-dot thermal width limit.
-  - Convert full-color art into optimized 1-bit monochrome binary bitmaps with heavy contrast enhancement and specialized dithering suited for thermal heads.
+  - Convert full-colour art into optimised 1-bit monochrome binary bitmaps with heavy contrast enhancement and specialised dithering suited for thermal heads.
 
 ## Architecture & Workflow
 
-1. **Data Pipeline:** Python scripts run prior to deployment fetching card imagery, converting to monochrome formats, categorizing into hierarchical SD card directories by CMC (e.g., `/data/cards/2/`), and packaging `.bin` index files.
-2. **Boot & Initialization:** The ESP32 boots, mounts the SD-MMC for high-speed file access, initializes UI/printer drivers, and spawns background server tasks for OTA and FTP.
+1. **Data Pipeline:** Python scripts run prior to deployment, fetching card imagery, converting to monochrome formats, categorising into hierarchical SD card directories by CMC (e.g., `/data/cards/2/`), and packaging `.bin` index files.
+2. **Boot & Initialisation:** The ESP32 boots, mounts the SD-MMC for high-speed file access, initialises UI/printer drivers, and spawns background server tasks for OTA and FTP.
 3. **User Operation:** Turning the rotary encoder shifts the targeted CMC. A button press reads an index file to fetch a random card filepath in standard execution time.
 4. **Data Streaming:** Buffers pull the raw 1-bit pixel payloads from the SD card and stream the binary packet stream over serial UART directly to the thermal receipt printer to yield the final token output on demand.
