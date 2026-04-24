@@ -45,6 +45,15 @@ void Printer::printBitmapRaw(const uint8_t *data, size_t length)
 {
   _busy.store(true);
 
+  constexpr size_t kPrinterRowBytes = 48; // 384px wide printer / 8 pixels per byte
+  auto reverseBits = [](uint8_t b) -> uint8_t
+  {
+    b = (b & 0xF0) >> 4 | (b & 0x0F) << 4;
+    b = (b & 0xCC) >> 2 | (b & 0x33) << 2;
+    b = (b & 0xAA) >> 1 | (b & 0x55) << 1;
+    return b;
+  };
+
   if (!data || length == 0)
   {
     Serial.println(F("[PRINTER] No image data provided"));
@@ -58,9 +67,28 @@ void Printer::printBitmapRaw(const uint8_t *data, size_t length)
   Serial.print(length);
   Serial.println(F(" bytes to serial"));
 
-  for (size_t i = 0; i < length; i++)
+  if (length % kPrinterRowBytes != 0)
   {
-    Serial1.write(~data[i]);
+    // Fallback to linear write if the payload is not an exact whole number of rows.
+    for (size_t i = 0; i < length; i++)
+    {
+      Serial1.write(~data[i]);
+    }
+  }
+  else
+  {
+    const size_t rowCount = length / kPrinterRowBytes;
+
+    // Send rows bottom-to-top and mirror each row so output reads left-to-right.
+    for (size_t row = rowCount; row > 0; --row)
+    {
+      const size_t rowOffset = (row - 1) * kPrinterRowBytes;
+      for (size_t colByte = kPrinterRowBytes; colByte > 0; --colByte)
+      {
+        const uint8_t src = data[rowOffset + (colByte - 1)];
+        Serial1.write(~reverseBits(src));
+      }
+    }
   }
 
   lineFeed(3);
