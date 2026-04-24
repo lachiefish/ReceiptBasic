@@ -6,7 +6,7 @@ static const char INDEX_HTML[] PROGMEM = R"rawliteral(
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-  <title>Token Printer</title>
+  <title>Receipt Basic</title>
   <style>
     :root { --bg: #0f0f1a; --surface: #1a1a2e; --surface2: #16213e; --accent: #e94560;
             --text: #eee; --muted: #8888aa; --radius: 10px; }
@@ -120,7 +120,7 @@ static const char INDEX_HTML[] PROGMEM = R"rawliteral(
 <body>
   <div class="header">
     <div class="title-bar">
-      <h1>Token Printer</h1>
+      <h1>Receipt Basic</h1>
       <button class="menu-btn" onclick="toggleMenu()" aria-label="Menu">&#9776;</button>
       <div class="menu-dropdown" id="menu">
         <a href="/status">System Status</a>
