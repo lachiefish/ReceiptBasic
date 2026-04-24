@@ -13,7 +13,7 @@ A custom hardware/software prototype for instantly generating and printing rando
 - **Embedded User Interface:** An SSD1306 OLED and rotary encoder provide the UI for selecting the CMC.
 - **Instant Thermal Printing:** Directly interfaces with a 384-dot wide QR204 serial thermal printer using raw bitmap streaming.
 - **Headless Network Management:** Hosts an Async Web Server and Simple FTP Server over Wi-Fi, allowing new card image datasets to be uploaded to the SD-MMC card without removing it from the chassis (The FTP server is very slow. I do not recommend using it to update the SD card contents, rather to test different image profiles).
-- **Over-The-Air (OTA) Updates:** Includes `ElegantOTA` to flash new firmware remotely.
+- **Over-The-Air (OTA) Updates:** Includes `ElegantOTA` to flash new firmware remotely (192.168.4.1/update).
 - **Battery Management System:** Includes battery voltage sensing.
 - **Charging:** Uses a USB-C PD board set to 20V (input volatage will be lower if the power supply does not support 20V) into a buck/boost converter outputting 18V, into a buck CC/CV charger that charges the homemade 4S 18650 pack. It would have been much easier to use a dedicated power supply to charge it, but I really wanted it to be USB-C. I did try designing my own PCB for this, however that proved to be too challenging for now.
 
