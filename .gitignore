@@ -6,6 +6,7 @@
 
 data/*
 !data/scripts/
+!data/images/
 data/scripts/creatures.json
 data/scripts/tokens.json
 
