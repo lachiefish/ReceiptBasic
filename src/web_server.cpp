@@ -17,7 +17,7 @@ PrinterWebServer::PrinterWebServer(Storage &storage, Printer &printer)
 
 void PrinterWebServer::begin()
 {
-  WiFi.softAP("ReceiptBasic", "magicslotmachine");
+  WiFi.softAP("ReceiptBasic", WEB_SERVER_PASSWORD);
   Serial.println(F("[WEB SERVER] WiFi started"));
   ElegantOTA.begin(&server);
   // WebSerial.begin(&server);
