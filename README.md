@@ -6,7 +6,7 @@ A custom hardware/software prototype for instantly generating and printing rando
 
 ## Overview
 
-**ReceiptBasic** is a standalone, battery-powered embedded device driven by an ESP32-S3 microcontroller. It is intended to be used as a way to play ![Momir Basic](https://magic.wizards.com/en/formats/momir-basic) (a format in the card game Magic: The Gathering) in person. It allows users to dial in a Converted Mana Cost (CMC) via a physical rotary encoder and OLED display. Upon pressing the encoder, the device instantly fetches a random MTG creature token matching that CMC from an SD card and prints it directly onto thermal paper using a QR204 thermal receipt printer. Accessing the built in web server also gives options to print specific cards, or to print tokens.
+**ReceiptBasic** is a standalone, battery-powered embedded device driven by an ESP32-S3 microcontroller. It is intended to be used as a way to play [Momir Basic](https://magic.wizards.com/en/formats/momir-basic) (a format in the card game Magic: The Gathering) in person. It allows users to dial in a Converted Mana Cost (CMC) via a physical rotary encoder and OLED display. Upon pressing the encoder, the device instantly fetches a random MTG creature token matching that CMC from an SD card and prints it directly onto thermal paper using a QR204 thermal receipt printer. Accessing the built in web server also gives options to print specific cards, or to print tokens.
 
 ## Key Features
 
